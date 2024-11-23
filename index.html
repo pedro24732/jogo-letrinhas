@@ -57,7 +57,7 @@
         let currentWord = "";
         let score = 0;
         let timer;
-        let timeLeft = 3;
+        let timeLeft = 5;
 
         const wordContainer = document.getElementById("word-container");
         const inputBox = document.getElementById("input-box");
@@ -67,7 +67,7 @@
         // Função para gerar uma palavra aleatória
         function generateWord() {
             clearInterval(timer); // Para o cronômetro anterior
-            timeLeft = 3; // Reinicia o tempo
+            timeLeft = 5; // Reinicia o tempo
             updateTimer(); // Atualiza o display do tempo
 
             currentWord = wordList[Math.floor(Math.random() * wordList.length)];
