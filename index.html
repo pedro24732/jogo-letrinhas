@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME DE TECLADO</title>
+    <title>Jogo de Digitação</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,7 +45,7 @@
     </style>
 </head>
 <body>
-    <h1>Jogo de Digitação</h1>
+    <h1>VOCÊ E RAPIDO?, VEREMOS</h1>
     <p>Digite a palavra abaixo:</p>
     <div class="word-container" id="word-container"></div>
     <input type="text" id="input-box" placeholder="Digite aqui..." autocomplete="off" />
@@ -53,7 +53,7 @@
     <div class="score" id="score">Pontuação: 0</div>
 
     <script>
-        const wordList = ["pedro", "casa", "escola", "carro", "computador", "jogador", "internet", "livro", "celular", "trabalho", "alucarde", "lua", "dia", "medico", "correndo", "pessoa"];
+        const wordList = ["pedro", "casa", "escola", "carro", "computador", "jogador", "internet", "livro", "celular", "trabalho", "alunos", "professor", "pessoalmente", "trabalhador", "programador", "jogador de basquete"];
         let currentWord = "";
         let score = 0;
         let timer;
@@ -105,12 +105,12 @@
 
         // Função para verificar a digitação
         function checkTyping() {
-            const userInput = inputBox.value;
+            const userInput = inputBox.value.toLowerCase(); // Converte para minúsculo
             const letters = document.querySelectorAll(".letter");
 
             let isCorrect = true;
 
-            currentWord.split("").forEach((letter, index) => {
+            currentWord.toLowerCase().split("").forEach((letter, index) => {
                 if (userInput[index] === letter) {
                     letters[index].classList.add("correct");
                     letters[index].classList.remove("incorrect");
@@ -124,7 +124,7 @@
                 }
             });
 
-            if (userInput === currentWord) {
+            if (userInput === currentWord.toLowerCase()) {
                 score += 10; // Pontuação ao acertar
                 scoreDisplay.textContent = `Pontuação: ${score}`;
                 clearInterval(timer); // Para o cronômetro
@@ -140,4 +140,3 @@
     </script>
 </body>
 </html>
-
