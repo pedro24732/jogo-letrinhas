@@ -53,90 +53,103 @@
     <div class="score" id="score">Pontuação: 0</div>
 
     <script>
-        const wordList = ["pedro", "casa", "escola", "carro", "computador", "jogador", "internet", "livro", "celular", "trabalho", "alunos", "professor", "pessoalmente", "trabalhador", "programador", "jogador de basquete"];
-        let currentWord = "";
-        let score = 0;
-        let timer;
-        let timeLeft = 5;
+    const wordList = ["pedro", "casa", "escola", "carro", "computador", "jogador", "internet", "livro", "celular", "trabalho", "alunos", "professor", "pessoalmente", "trabalhador", "programador", "jogador de basquete"];
+    let currentWord = "";
+    let score = 0;
+    let timer;
+    let timeLeft = 5;
+    let startTime; // Variável para armazenar o início do tempo
 
-        const wordContainer = document.getElementById("word-container");
-        const inputBox = document.getElementById("input-box");
-        const timerDisplay = document.getElementById("timer");
-        const scoreDisplay = document.getElementById("score");
+    const wordContainer = document.getElementById("word-container");
+    const inputBox = document.getElementById("input-box");
+    const timerDisplay = document.getElementById("timer");
+    const scoreDisplay = document.getElementById("score");
 
-        // Função para gerar uma palavra aleatória
-        function generateWord() {
-            clearInterval(timer); // Para o cronômetro anterior
-            timeLeft = 5; // Reinicia o tempo
-            updateTimer(); // Atualiza o display do tempo
+    // Função para gerar uma palavra aleatória
+    function generateWord() {
+        clearInterval(timer); // Para o cronômetro anterior
+        timeLeft = 5; // Reinicia o tempo
+        updateTimer(); // Atualiza o display do tempo
 
-            currentWord = wordList[Math.floor(Math.random() * wordList.length)];
-            wordContainer.innerHTML = "";
-            currentWord.split("").forEach(letter => {
-                const span = document.createElement("span");
-                span.textContent = letter;
-                span.className = "letter";
-                wordContainer.appendChild(span);
-            });
-            inputBox.value = "";
+        startTime = Date.now(); // Registra o momento em que a palavra foi gerada
 
-            startTimer(); // Inicia o cronômetro
-        }
+        currentWord = wordList[Math.floor(Math.random() * wordList.length)];
+        wordContainer.innerHTML = "";
+        currentWord.split("").forEach(letter => {
+            const span = document.createElement("span");
+            span.textContent = letter;
+            span.className = "letter";
+            wordContainer.appendChild(span);
+        });
+        inputBox.value = "";
 
-        // Função para atualizar o cronômetro no display
-        function updateTimer() {
-            timerDisplay.textContent = `Tempo: ${timeLeft}s`;
-        }
+        startTimer(); // Inicia o cronômetro
+    }
 
-        // Função para iniciar o cronômetro
-        function startTimer() {
-            timer = setInterval(() => {
-                timeLeft--;
-                updateTimer();
+    // Função para atualizar o cronômetro no display
+    function updateTimer() {
+        timerDisplay.textContent = `Tempo: ${timeLeft}s`;
+    }
 
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    score -= 10; // Penalidade por não completar a palavra
-                    scoreDisplay.textContent = `Pontuação: ${score}`;
-                    generateWord(); // Gera nova palavra
-                }
-            }, 1000);
-        }
+    // Função para iniciar o cronômetro
+    function startTimer() {
+        timer = setInterval(() => {
+            timeLeft--;
+            updateTimer();
 
-        // Função para verificar a digitação
-        function checkTyping() {
-            const userInput = inputBox.value.toLowerCase(); // Converte para minúsculo
-            const letters = document.querySelectorAll(".letter");
-
-            let isCorrect = true;
-
-            currentWord.toLowerCase().split("").forEach((letter, index) => {
-                if (userInput[index] === letter) {
-                    letters[index].classList.add("correct");
-                    letters[index].classList.remove("incorrect");
-                } else if (userInput[index] === undefined) {
-                    letters[index].classList.remove("correct", "incorrect");
-                    isCorrect = false;
-                } else {
-                    letters[index].classList.add("incorrect");
-                    letters[index].classList.remove("correct");
-                    isCorrect = false;
-                }
-            });
-
-            if (userInput === currentWord.toLowerCase()) {
-                score += 10; // Pontuação ao acertar
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                score -= 10; // Penalidade por não completar a palavra
                 scoreDisplay.textContent = `Pontuação: ${score}`;
-                clearInterval(timer); // Para o cronômetro
-                setTimeout(generateWord, 1000); // Gera nova palavra após 1 segundo
+                generateWord(); // Gera nova palavra
             }
+        }, 1000);
+    }
+
+    // Função para verificar a digitação
+    function checkTyping() {
+        const userInput = inputBox.value.toLowerCase(); // Converte para minúsculo
+        const letters = document.querySelectorAll(".letter");
+
+        let isCorrect = true;
+
+        currentWord.toLowerCase().split("").forEach((letter, index) => {
+            if (userInput[index] === letter) {
+                letters[index].classList.add("correct");
+                letters[index].classList.remove("incorrect");
+            } else if (userInput[index] === undefined) {
+                letters[index].classList.remove("correct", "incorrect");
+                isCorrect = false;
+            } else {
+                letters[index].classList.add("incorrect");
+                letters[index].classList.remove("correct");
+                isCorrect = false;
+            }
+        });
+
+        if (userInput === currentWord.toLowerCase()) {
+            const elapsedTime = (Date.now() - startTime) / 1000; // Calcula o tempo decorrido em segundos
+            score += 10; // Pontuação ao acertar
+            scoreDisplay.textContent = `Pontuação: ${score}`;
+            clearInterval(timer); // Para o cronômetro
+
+            // Mostra uma crítica se o tempo for menor que 3 segundos
+            if (elapsedTime < 3) {
+                alert(`Uau! Você digitou em ${elapsedTime.toFixed(2)} segundos. Super rápido!`);
+            } else {
+                alert(`Você levou ${elapsedTime.toFixed(2)} segundos para completar. Continue tentando!`);
+            }
+
+            setTimeout(generateWord, 1000); // Gera nova palavra após 1 segundo
         }
+    }
 
-        // Evento de input para verificar a digitação
-        inputBox.addEventListener("input", checkTyping);
+    // Evento de input para verificar a digitação
+    inputBox.addEventListener("input", checkTyping);
 
-        // Inicializa o jogo
-        generateWord();
-    </script>
+    // Inicializa o jogo
+    generateWord();
+</script>
+
 </body>
 </html>
